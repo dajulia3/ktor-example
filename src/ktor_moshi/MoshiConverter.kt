@@ -15,7 +15,10 @@ import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.coroutines.io.jvm.javaio.toInputStream
 import okio.buffer
 import okio.source
-
+/*
+ * This file is pulled from https://github.com/rharter/ktor-moshi . Was only one file for the whole library,
+ * so didn't want the external dependency that pulled in random versions of ktor and whatnot that were out of date.
+ */
 class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : ContentConverter {
     override suspend fun convertForReceive(context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>): Any? {
         val request = context.subject

@@ -1,5 +1,6 @@
 package com.claimsy
 
+import com.claimsy.app.module
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*

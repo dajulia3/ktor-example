@@ -31,23 +31,32 @@ repositories {
 
 
 dependencies {
-    implementation("com.squareup.moshi:moshi:1.8.0")
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "io.ktor:ktor-server-cio:$ktor_version"
     compile "ch.qos.logback:logback-classic:$logback_version"
     compile "io.ktor:ktor-server-core:$ktor_version"
     compile "io.ktor:ktor-thymeleaf:$ktor_version"
     compile "io.ktor:ktor-server-host-common:$ktor_version"
-    compile "com.ryanharter.ktor:ktor-moshi:1.0.1"
+
+    //JSON - moshi support
+    compile("com.squareup.moshi:moshi:1.8.0")
+    implementation 'com.squareup.moshi:moshi-adapters:1.8.0'
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+    kaptTest "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+    compile 'com.squareup.okio:okio:2.2.2'
 
     //Test libraries
     testImplementation("io.strikt:strikt-core:0.21.1")
+    
+    //Integration Test Libs
+    testImplementation 'io.rest-assured:rest-assured:3.0.0'
+    testImplementation 'uk.co.datumedge:hamcrest-json:0.2'
+
+    //Consider requery as orm
 
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.0')
 
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
-    kaptTest 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 }
 
 test {

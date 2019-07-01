@@ -1,7 +1,6 @@
 package ktor_moshi
 
 
-import com.ryanharter.ktor.moshi.moshi
 import com.squareup.moshi.JsonClass
 import io.ktor.application.call
 import io.ktor.application.install
@@ -23,6 +22,7 @@ import org.junit.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
+import ktor_moshi.*
 
 class MoshiConverterTest {
 
@@ -30,7 +30,7 @@ class MoshiConverterTest {
     fun reflection() {
         withTestApplication {
             application.install(ContentNegotiation) {
-                moshi { }
+                moshi {}
             }
             application.routing {
                 val foo = Foo(id = 42, name = "Foosius")
