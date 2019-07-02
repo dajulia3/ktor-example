@@ -12,7 +12,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import java.util.concurrent.TimeUnit
 
-open class ServerTest {
+abstract class ServerTest {
 
     protected fun RequestSpecification.When(): RequestSpecification {
         return this.`when`()

@@ -1,5 +1,6 @@
 package com.claimsy.app
 
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -10,9 +11,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
+import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.thymeleaf.Thymeleaf
 import io.ktor.thymeleaf.ThymeleafContent
@@ -45,6 +48,12 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
+
+        post("/wizz-banger") {
+            val wizzBanger: WizzBanger = call.receive()
+            call.respond(HttpStatusCode.Created, wizzBanger)
+        }
+
         get("/html-thymeleaf") {
             call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
         }
@@ -71,3 +80,10 @@ data class ThymeleafUser(val id: Int, val name: String)
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
 
+@JsonClass(generateAdapter = true)
+data class Fizzer(
+    var fizziness: String,
+    var temperature: Int
+)
+@JsonClass(generateAdapter = true)
+data class WizzBanger(var id: String, var name: String, var fizzer: Fizzer)
