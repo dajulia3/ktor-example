@@ -33,6 +33,7 @@ abstract class ServerTest {
         fun startServer() {
             if (!serverStarted) {
                 val port = 8888
+
                 server = embeddedServer(CIO, commandLineEnvironment(arrayOf("-port=$port")))
                 server.start()
                 serverStarted = true
