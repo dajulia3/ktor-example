@@ -18,6 +18,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.cio.CIO
+import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.util.KtorExperimentalAPI
 import ktor_moshi.moshi
@@ -26,8 +27,13 @@ import java.util.*
 
 @UseExperimental(KtorExperimentalAPI::class)
 fun main(args: Array<String>) {
-    val server = embeddedServer(CIO, 8080, module = Application::module)
-    server.start(wait = true)
+    startServer(8080, wait = true)
+}
+
+fun startServer(port: Int, wait: Boolean): CIOApplicationEngine {
+    val server = embeddedServer(CIO, port, module = Application::module)
+    server.start(wait = wait)
+    return server
 }
 
 //fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)

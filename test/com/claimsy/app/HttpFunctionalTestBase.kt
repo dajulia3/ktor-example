@@ -1,14 +1,9 @@
 package com.claimsy.app
 
-import io.ktor.server.cio.CIO
 import io.ktor.server.engine.ApplicationEngine
-import io.ktor.server.engine.commandLineEnvironment
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.restassured.RestAssured
 import io.restassured.response.ResponseBodyExtractionOptions
 import io.restassured.specification.RequestSpecification
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import java.util.concurrent.TimeUnit
 
@@ -34,8 +29,7 @@ abstract class ServerTest {
             if (!serverStarted) {
                 val port = 8888
 
-                server = embeddedServer(CIO, commandLineEnvironment(arrayOf("-port=$port")))
-                server.start()
+                server = startServer(port = port, wait = false)
                 serverStarted = true
 
                 RestAssured.baseURI = "http://0.0.0.0"

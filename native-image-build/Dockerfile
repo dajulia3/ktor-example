@@ -15,12 +15,20 @@
 
 # docker build -f Dockerfile -t kraal-example build/fatjar
 
-FROM findepi/graalvm:1.0.0-rc14-native AS build
+##NOTE: we use initialize-at-buildtime to avoid errors when starting the server
+native_image_build_dir=
+
+FROM findepi/graalvm:19.0.2-native AS build
 COPY example.jar .
 RUN native-image \
+    -H:Log=registerResource \
+    -H:ResourceConfigurationFiles=${native_image_build_dir}/resource-config.json \
     --verbose \
     --static \
     --report-unsupported-elements-at-runtime \
+    --initialize-at-build-time \
+    --no-fallback \
+    --no-server
     -jar example.jar
 
 FROM scratch
