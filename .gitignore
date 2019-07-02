@@ -5,3 +5,5 @@
 *.iml
 *.ipr
 *.iws
+
+/Users/djulia/workspace/ktor-app/native-image-build/native-build

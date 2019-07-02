@@ -25,6 +25,7 @@ abstract class ServerTest {
 
         @BeforeAll
         @JvmStatic
+        @Suppress("unused")
         fun startServer() {
             if (!serverStarted) {
                 val port = 8888

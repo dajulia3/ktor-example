@@ -8,8 +8,10 @@ native_image_build_dir=${BASH_SOURCE%/*}/
 native-image \
     --report-unsupported-elements-at-runtime \
     -H:Log=registerResource \
+    -H:ReflectionConfigurationFiles=${native_image_build_dir}/reflect.json \
     -H:ResourceConfigurationFiles=${native_image_build_dir}/resource-config.json \
     --initialize-at-build-time \
+    --no-fallback \
     --no-server \
     -jar ${project_root_dir}/build/fatjar/example.jar
 #run it:

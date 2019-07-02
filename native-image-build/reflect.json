@@ -1,0 +1,10 @@
+[
+  {
+    "name" : "com.claimsy.app.FizzerJsonAdapter",
+    "allDeclaredConstructors" : true
+  },
+  {
+    "name" : "com.claimsy.app.WizzBangerJsonAdapter",
+    "allDeclaredConstructors" : true
+  }
+]
