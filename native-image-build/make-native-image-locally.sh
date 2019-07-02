@@ -9,6 +9,7 @@ native-image \
     --report-unsupported-elements-at-runtime \
     -H:Log=registerResource \
     -H:ResourceConfigurationFiles=${native_image_build_dir}/resource-config.json \
+    --initialize-at-build-time \
     --no-server \
     -jar ${project_root_dir}/build/fatjar/example.jar
 #run it:

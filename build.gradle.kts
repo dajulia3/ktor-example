@@ -16,7 +16,7 @@ group = "com.claimsy"
 version = "0.0.1-SNAPSHOT"
 
 application {
-    mainClassName = "io.ktor.server.cio.EngineMain"
+    mainClassName = "com.claimsy.app.ApplicationKt"
 }
 
 repositories {
@@ -30,7 +30,7 @@ dependencies {
     compile("io.ktor:ktor-server-cio:$ktor_version")
     implementation("org.slf4j:slf4j-simple:1.7.26")
     compile("io.ktor:ktor-server-core:$ktor_version")
-    compile("io.ktor:ktor-thymeleaf:$ktor_version")
+    //consider Rocker for templates
     compile("io.ktor:ktor-server-host-common:$ktor_version")
     testCompile("io.ktor:ktor-server-tests:$ktor_version")
 
@@ -87,7 +87,7 @@ val fatjar by tasks.creating(Jar::class) {
     }
 
     manifest {
-        attributes("Main-Class" to "io.ktor.server.cio.EngineMain")
+        attributes("Main-Class" to "com.claimsy.app.ApplicationKt")
     }
 
     destinationDirectory.set(project.buildDir.resolve("fatjar"))

@@ -17,24 +17,30 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import io.ktor.thymeleaf.Thymeleaf
-import io.ktor.thymeleaf.ThymeleafContent
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.embeddedServer
+import io.ktor.util.KtorExperimentalAPI
 import ktor_moshi.moshi
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.util.*
 
-fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
+
+@UseExperimental(KtorExperimentalAPI::class)
+fun main(args: Array<String>) {
+    val server = embeddedServer(CIO, 8080, module = Application::module)
+    server.start(wait = true)
+}
+
+//fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
-    install(Thymeleaf) {
-        setTemplateResolver(ClassLoaderTemplateResolver().apply {
-            prefix = "templates/thymeleaf/"
-            suffix = ".html"
-            characterEncoding = "utf-8"
-        })
-    }
+fun Application.module() {
+//    install(Thymeleaf) {
+//        setTemplateResolver(ClassLoaderTemplateResolver().apply {
+//            prefix = "templates/thymeleaf/"
+//            suffix = ".html"
+//            characterEncoding = "utf-8"
+//        })
+//    }
 
     install(ContentNegotiation) {
         moshi {
@@ -54,9 +60,9 @@ fun Application.module(testing: Boolean = false) {
             call.respond(HttpStatusCode.Created, wizzBanger)
         }
 
-        get("/html-thymeleaf") {
-            call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
-        }
+//        get("/html-thymeleaf") {
+//            call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
+//        }
 
         // Static feature. Try to access `/static/ktor_logo.svg`
         static("/static") {
