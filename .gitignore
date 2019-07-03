@@ -6,4 +6,8 @@
 *.ipr
 *.iws
 
+example
+native-image-build/generated-config/*.json
+
+*.DS_Store
 /Users/djulia/workspace/ktor-app/native-image-build/native-build

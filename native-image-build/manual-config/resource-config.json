@@ -1,0 +1,7 @@
+{
+  "resources": [
+    {"pattern": "static.*"},
+    {"pattern": "templates.thymeleaf.*"},
+    {"pattern": "application.conf"}
+  ]
+}

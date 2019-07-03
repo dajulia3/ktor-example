@@ -1,0 +1,19 @@
+[
+  {
+    "name": "java.lang.Integer"
+  },
+  {
+    "name": "java.lang.String"
+  },
+  {
+    "name": "io.ktor.server.cio.CIOApplicationEngine"
+  },
+  {
+    "name": "io.ktor.application.Application"
+  },
+  {
+    "name": "java.util.LinkedHashMap",
+    "allPublicConstructors": true,
+    "allPublicMethods": true
+  }
+]

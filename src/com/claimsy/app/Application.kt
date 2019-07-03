@@ -1,16 +1,21 @@
 package com.claimsy.app
 
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+//import com.palantir.graal.annotations.GraalReflectable
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
+import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -19,19 +24,26 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.cio.CIO
 import io.ktor.server.cio.CIOApplicationEngine
+import io.ktor.server.engine.commandLineEnvironment
 import io.ktor.server.engine.embeddedServer
 import io.ktor.util.KtorExperimentalAPI
-import ktor_moshi.moshi
-import java.util.*
+import org.slf4j.event.Level
 
-
-@UseExperimental(KtorExperimentalAPI::class)
-fun main(args: Array<String>) {
-    startServer(8080, wait = true)
+object Main {
+    @UseExperimental(KtorExperimentalAPI::class)
+    @JvmStatic
+    fun main(args: Array<String>) {
+        startServer(port = 8080, wait = true, args = args)
+    }
 }
 
-fun startServer(port: Int, wait: Boolean): CIOApplicationEngine {
-    val server = embeddedServer(CIO, port, module = Application::module)
+fun startServer(port: Int?, wait: Boolean, args: Array<String> = emptyArray()): CIOApplicationEngine {
+    var mergedArgs = args
+    if (port != null) {
+        mergedArgs = arrayOf("-port=$port") + args
+    }
+    val server = embeddedServer(factory = CIO, environment = commandLineEnvironment(mergedArgs))
+
     server.start(wait = wait)
     return server
 }
@@ -49,9 +61,12 @@ fun Application.module() {
 //    }
 
     install(ContentNegotiation) {
-        moshi {
-            // Configure the Moshi.Builder here.
-            add(Date::class.java, Rfc3339DateJsonAdapter())
+        jackson {
+            enable(SerializationFeature.INDENT_OUTPUT)
+            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            registerModule(JavaTimeModule())
+            registerModule(KotlinModule())
+            disableDefaultTyping()
         }
     }
 
@@ -84,6 +99,10 @@ fun Application.module() {
             }
 
         }
+
+        install(CallLogging){
+            level = Level.INFO
+        }
     }
 }
 
@@ -92,10 +111,11 @@ data class ThymeleafUser(val id: Int, val name: String)
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
 
-@JsonClass(generateAdapter = true)
+//@GraalReflectable
 data class Fizzer(
     var fizziness: String,
     var temperature: Int
 )
-@JsonClass(generateAdapter = true)
+
+//@GraalReflectable
 data class WizzBanger(var id: String, var name: String, var fizzer: Fizzer)

@@ -21,7 +21,7 @@ FROM findepi/graalvm:19.0.2-native AS build
 COPY example.jar .
 RUN native-image \
     -H:Log=registerResource \
-    -H:ReflectionConfigurationFiles=${native_image_build_dir}/reflect.json \
+    -H:ReflectionConfigurationFiles=${native_image_build_dir}/base-reflect.json,${native_image_build_dir}/generated-config/reflect-config.json \
     -H:ResourceConfigurationFiles=${BASH_SOURCE%/*}/resource-config.json \
     --verbose \
     --static \
