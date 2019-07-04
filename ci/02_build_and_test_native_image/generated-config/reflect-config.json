@@ -1,0 +1,48 @@
+[
+{
+  "name":"com.claimsy.app.ApplicationKt",
+  "allPublicMethods":true,
+  "methods":[
+    {"name":"module","parameterTypes":["io.ktor.application.Application"] }, 
+    {"name":"startServer","parameterTypes":["java.lang.Integer","boolean","java.lang.String[]"] }
+  ]
+},
+{
+  "name":"com.claimsy.app.Fizzer",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"com.claimsy.app.WizzBanger",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Object"
+},
+{
+  "name":"kotlin.Metadata",
+  "allDeclaredMethods":true
+},
+{
+  "name":"kotlin.jvm.internal.DefaultConstructorMarker"
+},
+{
+  "name":"kotlin.reflect.jvm.internal.ReflectionFactoryImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"kotlin.reflect.jvm.internal.impl.resolve.scopes.DescriptorKindFilter",
+  "allPublicFields":true
+},
+{
+  "name":"sun.misc.Unsafe",
+  "fields":[{"name":"theUnsafe"}]
+}
+]

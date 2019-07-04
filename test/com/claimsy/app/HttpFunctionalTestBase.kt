@@ -36,19 +36,17 @@ abstract class ServerTest {
         fun startServer() {
             if (!serverStarted) {
                 val host = "0.0.0.0"
-                var port = System.getProperty("port")?.toInt() ?: 8888
+                var port = System.getProperty("runningOnPort")?.toInt() ?: 8888
                 val runServerInSeparateProcess = System.getProperty("runServerInSeparateProcess")
-                val nativeTest = System.getProperty("nativeTest")?.toBoolean() ?: false
 
                 if (runServerInSeparateProcess?.equals("true") == true) {
                     runServerAsSeparateProcessWithGraalTracerAgent(port, host)
-                } else if (nativeTest) {
-                    port = 8080
-                    waitForServerToStart(host, 8080)
                 } else {
                     server = startServer(port = port, wait = false)
                     Runtime.getRuntime().addShutdownHook(Thread { server.stop(0, 0, TimeUnit.SECONDS) })
                 }
+
+                waitForServerToStart(host, port)
 
                 serverStarted = true
 

@@ -1,0 +1,9 @@
+{
+  "resources":[
+    {"pattern":"META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition"}, 
+    {"pattern":"application.conf"}, 
+    {"pattern":"kotlin/kotlin.kotlin_builtins"}, 
+    {"pattern":"org/slf4j/impl/StaticLoggerBinder.class"}, 
+    {"pattern":"simplelogger.properties"}
+  ]
+}

@@ -7,7 +7,7 @@
 *.iws
 
 application
-native-image-build/generated-config/*.json
+ci/02_build_and_test_native_image/generated-config/*.json
 
 *.DS_Store
 /Users/djulia/workspace/ktor-app/native-image-build/native-build
