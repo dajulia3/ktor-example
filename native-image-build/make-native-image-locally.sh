@@ -16,7 +16,9 @@ native-image \
     --initialize-at-build-time \
     --no-fallback \
     --no-server \
-    -jar ${project_root_dir}/build/fatjar/example.jar
+    -jar ${project_root_dir}/build/fatjar/application.jar
+
+
 #run it:
 # example --enable-url-protocols=http --no-server
 

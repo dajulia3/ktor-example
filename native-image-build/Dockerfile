@@ -18,7 +18,7 @@
 ##NOTE: we use initialize-at-buildtime to avoid errors when starting the server
 
 FROM findepi/graalvm:19.0.2-native AS build
-COPY example.jar .
+COPY application.jar .
 RUN native-image \
     -H:Log=registerResource \
     -H:ReflectionConfigurationFiles=${native_image_build_dir}/base-reflect.json,${native_image_build_dir}/generated-config/reflect-config.json \
@@ -29,9 +29,9 @@ RUN native-image \
     --initialize-at-build-time \
     --no-fallback \
     --no-server \
-    -jar example.jar
+    -jar application.jar
 
 FROM scratch
 EXPOSE 8080
 COPY --from=build example ${BASH_SOURCE%/*}/
-CMD ["/example"]
+CMD ["/application"]

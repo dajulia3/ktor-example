@@ -6,7 +6,7 @@
 *.ipr
 *.iws
 
-example
+application
 native-image-build/generated-config/*.json
 
 *.DS_Store

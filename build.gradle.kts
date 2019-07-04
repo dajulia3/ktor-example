@@ -146,7 +146,7 @@ val fatjar by tasks.creating(Jar::class) {
     }
 
     destinationDirectory.set(project.buildDir.resolve("fatjar"))
-    archiveFileName.set("example.jar")
+    archiveFileName.set("application.jar")
 }
 
 tasks.named("assemble").configure {
