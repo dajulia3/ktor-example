@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-//import com.palantir.graal.annotations.GraalReflectable
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -52,14 +51,6 @@ fun startServer(port: Int?, wait: Boolean, args: Array<String> = emptyArray()): 
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
-//    install(Thymeleaf) {
-//        setTemplateResolver(ClassLoaderTemplateResolver().apply {
-//            prefix = "templates/thymeleaf/"
-//            suffix = ".html"
-//            characterEncoding = "utf-8"
-//        })
-//    }
-
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -68,6 +59,7 @@ fun Application.module() {
             registerModule(KotlinModule())
             disableDefaultTyping()
         }
+
     }
 
     routing {
