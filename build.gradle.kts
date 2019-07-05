@@ -91,7 +91,7 @@ tasks {
             systemProperties.putAll(
                 listOf(
                     "runServerInSeparateProcess" to "true",
-                    "configOutputDir" to "${project.rootDir}/native-image-build/generated-config"
+                    "configOutputDir" to "${project.rootDir}/ci/02_build_and_test_native_image/generated-config"
                 )
             )
 

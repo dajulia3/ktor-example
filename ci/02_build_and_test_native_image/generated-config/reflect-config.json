@@ -14,6 +14,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"com.claimsy.app.Widget",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"com.claimsy.app.WizzBanger",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -25,6 +31,11 @@
 },
 {
   "name":"java.lang.Object"
+},
+{
+  "name":"java.util.ArrayList",
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"kotlin.Metadata",

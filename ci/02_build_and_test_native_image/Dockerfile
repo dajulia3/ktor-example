@@ -18,11 +18,14 @@
 ##NOTE: we use initialize-at-buildtime to avoid errors when starting the server
 
 FROM findepi/graalvm:19.0.2-native AS build
-COPY application.jar .
+RUN ls
+COPY native-build/application.jar .
+COPY generated-config ./generated-config
+COPY manual-config ./manual-config
 RUN native-image \
     -H:Log=registerResource \
-    -H:ReflectionConfigurationFiles=${native_image_build_dir}/base-reflect.json,${native_image_build_dir}/generated-config/reflect-config.json \
-    -H:ResourceConfigurationFiles=${BASH_SOURCE%/*}/resource-config.json \
+    -H:ReflectionConfigurationFiles=${BASH_SOURCE%/*}/manual-config/reflect-config.json,${BASH_SOURCE%/*}/generated-config/reflect-config.json \
+    -H:ResourceConfigurationFiles=${BASH_SOURCE%/*}/manual-config/resource-config.json \
     --verbose \
     --static \
     --report-unsupported-elements-at-runtime \
