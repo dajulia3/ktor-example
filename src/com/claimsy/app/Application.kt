@@ -1,10 +1,12 @@
 package com.claimsy.app
 
+import com.claimsy.app.form_serialization.ActiveFormUrlEncodedToContentTypeConverter
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-//import com.palantir.graal.annotations.GraalReflectable
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -52,22 +54,20 @@ fun startServer(port: Int?, wait: Boolean, args: Array<String> = emptyArray()): 
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
-//    install(Thymeleaf) {
-//        setTemplateResolver(ClassLoaderTemplateResolver().apply {
-//            prefix = "templates/thymeleaf/"
-//            suffix = ".html"
-//            characterEncoding = "utf-8"
-//        })
-//    }
-
     install(ContentNegotiation) {
+        lateinit var mapper: ObjectMapper
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
             disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             registerModule(JavaTimeModule())
             registerModule(KotlinModule())
             disableDefaultTyping()
+
+            mapper = this
         }
+
+        register(ContentType.Application.FormUrlEncoded, ActiveFormUrlEncodedToContentTypeConverter(mapper))
+
     }
 
     routing {
@@ -81,9 +81,10 @@ fun Application.module() {
             call.respond(HttpStatusCode.Created, wizzBanger)
         }
 
-//        get("/html-thymeleaf") {
-//            call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
-//        }
+        post("/widget"){
+            val widget = call.receive<Widget>()
+            call.respond(HttpStatusCode.Created, widget)
+        }
 
         // Static feature. Try to access `/static/ktor_logo.svg`
         static("/static") {
@@ -119,3 +120,9 @@ data class Fizzer(
 
 //@GraalReflectable
 data class WizzBanger(var id: String, var name: String, var fizzer: Fizzer)
+
+data class Widget(
+    var name: String,
+    val jimbo: List<String>,
+    val age: Int
+)

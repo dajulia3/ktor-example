@@ -56,7 +56,6 @@ abstract class ServerTest {
         }
 
         private fun runServerAsSeparateProcessWithGraalTracerAgent(port: Int, host: String) {
-            println("======>>>>>>>>> class to execute = ${Main::class.java}")
             val configOutputDir = System.getProperty("configOutputDir")
                 ?: throw Exception("JVM property 'configOutputDir' must be set for this to work!")
 
@@ -116,7 +115,6 @@ abstract class ServerTest {
             command.add(classpath)
             command.add(className)
             command.addAll(args)
-            println("COMMAND IS ======>>>>>>>>> $command")
 
             val builder = ProcessBuilder(command)
             return builder.inheritIO().start() ?: throw Exception("Unexpected error starting process. Exiting.")

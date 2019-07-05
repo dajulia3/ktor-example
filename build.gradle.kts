@@ -52,6 +52,7 @@ dependencies {
     //Integration Test Libs
     testImplementation("io.rest-assured:rest-assured:3.0.0")
     testImplementation("uk.co.datumedge:hamcrest-json:0.2")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.9.9")
 
 
     //Consider requery as orm
