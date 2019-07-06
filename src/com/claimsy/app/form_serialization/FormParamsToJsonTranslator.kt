@@ -76,7 +76,6 @@ internal class FormParamsToJsonTranslator {
         }
         val after = currentParam.substring(indexAfterMatch)
 
-
         //TODO: Not sure why this logic is necessary.
         //It is here because I did a faithful port of the Rack logic from
         //here: https://github.com/rack/rack/blob/5e08d39b323d37fd354f63bac0fc30047c528e35/lib/rack/query_parser.rb
