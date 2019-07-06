@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.POJONode
 import io.ktor.http.decodeURLPart
-import java.io.InputStream
+import io.ktor.util.KtorExperimentalAPI
 
 internal class FormParamsToJsonTranslator {
     private val nodeFactory = JsonNodeFactory.instance
 
+    @KtorExperimentalAPI
     fun jsonFromFormBody(formBody: String): ObjectNode? {
         val params = makeParams()
 
@@ -54,27 +54,27 @@ internal class FormParamsToJsonTranslator {
     }
 
 
-    private fun normalizeParams(params: ObjectNode, name: String, value: Any?, depth: Int): JsonNode? {
+    private fun normalizeParams(params: ObjectNode, currentParam: String, value: Any?, depth: Int): JsonNode? {
         if (depth <= 0) {
             throw IllegalArgumentException("Exceeded the form params depth limit of $PARAMS_DEPTH_LIMIT")
         }
 
-        val firstNameMatchResult = Regex("\\A[\\[\\]]*([^\\[\\]]+)\\]*").find(name, 0)
+        val firstNameMatchResult = Regex("\\A[\\[\\]]*([^\\[\\]]+)\\]*").find(currentParam, 0)
 
         var k = ""
-        var indexAfterMatch = name.length
+        var indexAfterMatch = currentParam.length
 
         if (firstNameMatchResult?.groups != null) {
             val firstNameMatchGroup = firstNameMatchResult.groups[1]
             k = firstNameMatchGroup!!.value
             val fullMatchGroup = firstNameMatchResult.groups[0]
-            indexAfterMatch = fullMatchGroup!!.range.endInclusive + 1
+            indexAfterMatch = fullMatchGroup!!.range.last + 1
         }
-        val after = name.substring(indexAfterMatch)
+        val after = currentParam.substring(indexAfterMatch)
 
 
         if (k.isEmpty()) {
-            return if (value != null && name == "[]") {
+            return if (value != null && currentParam == "[]") {
                 nodeFactory.arrayNode().add(nodeFactory.pojoNode(value))
             } else {
                 null
@@ -88,25 +88,25 @@ internal class FormParamsToJsonTranslator {
         if (after == "") {
             params.set(k, nodeFactory.pojoNode(value))
         } else if (after == "[") {
-            val jsonNode = params.get(name)
+            val jsonNode = params.get(currentParam)
             if (jsonNode == null) {
-                params.putPOJO(name, value)
+                params.putPOJO(currentParam, value)
             }
             if (jsonNode != null) {
                 if (jsonNode.isObject) {
-                    (jsonNode as ObjectNode).putPOJO(name, value)
+                    (jsonNode as ObjectNode).putPOJO(currentParam, value)
                 }
             }
         } else if (after == "[]") {
-            ensureCurrentParamIsArray(params, name, k)
+            ensureCurrentParamIsArray(params, currentParam, k)
             (params.get(k) as ArrayNode).add(nodeFactory.pojoNode(value))
         } else if (matchesArrayAfterArray != null && !matchesFirstWordAfterArray!!.groups.isEmpty()) {
-            normalizeParamsForElementOfArray(params, name, value, depth, k, matchesFirstWordAfterArray)
+            normalizeParamsForElementOfArray(params, currentParam, value, depth, k, matchesFirstWordAfterArray)
 
         } else if (matchesArrayAfterArray != null && !matchesArrayAfterArray.groups.isEmpty()) {
-            normalizeParamsForElementOfArray(params, name, value, depth, k, matchesArrayAfterArray)
+            normalizeParamsForElementOfArray(params, currentParam, value, depth, k, matchesArrayAfterArray)
         } else {
-            ensureCurrentParamIsObject(params, name, k)
+            ensureCurrentParamIsObject(params, currentParam, k)
             params.set(k, normalizeParams(params.get(k) as ObjectNode, after, value, depth - 1))
         }
 
