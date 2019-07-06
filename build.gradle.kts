@@ -35,7 +35,6 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
     compile("io.ktor:ktor-server-netty:$ktor_version")
     compile("ch.qos.logback:logback-classic:1.2.3")
-    compile("net.logstash.logback:logstash-logback-encoder:6.1")
     compile("io.ktor:ktor-server-core:$ktor_version")
     compile("io.ktor:ktor-server-host-common:$ktor_version")
     testCompile("io.ktor:ktor-server-tests:$ktor_version")
