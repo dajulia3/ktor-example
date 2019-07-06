@@ -68,7 +68,7 @@ sourceSets["test"].resources.srcDirs("testresources")
 
 
 val generateGraalConfig: String? by project
-val runningOnPort: String? by project
+val serverPort: String? by project
 
 tasks {
     test {
@@ -89,10 +89,10 @@ tasks {
                 )
             )
 
-            if(runningOnPort != null) {
-                systemProperties.put("runningOnPort", "8080");
-            }
+        }
 
+        if(serverPort != null) {
+            systemProperties.put("serverPort", "8080");
         }
     }
 }

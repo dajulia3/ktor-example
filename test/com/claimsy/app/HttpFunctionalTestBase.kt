@@ -36,7 +36,7 @@ abstract class ServerTest {
         fun startServer() {
             if (!serverStarted) {
                 val host = "0.0.0.0"
-                var port = System.getProperty("runningOnPort")?.toInt() ?: 8888
+                var port = System.getProperty("serverPort")?.toInt() ?: 8888
                 val runServerInSeparateProcess = System.getProperty("runServerInSeparateProcess")
 
                 if (runServerInSeparateProcess?.equals("true") == true) {
