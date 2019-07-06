@@ -2,11 +2,11 @@ package com.claimsy.app
 
 import com.claimsy.app.form_serialization.ActiveFormUrlEncodedToContentTypeConverter
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -24,12 +24,13 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import io.ktor.server.cio.CIO
-import io.ktor.server.cio.CIOApplicationEngine
+import io.ktor.server.engine.BaseApplicationEngine
 import io.ktor.server.engine.commandLineEnvironment
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import io.ktor.util.KtorExperimentalAPI
 import org.slf4j.event.Level
+import java.util.*
 
 object Main {
     @UseExperimental(KtorExperimentalAPI::class)
@@ -39,12 +40,12 @@ object Main {
     }
 }
 
-fun startServer(port: Int?, wait: Boolean, args: Array<String> = emptyArray()): CIOApplicationEngine {
+fun startServer(port: Int?, wait: Boolean, args: Array<String> = emptyArray()): BaseApplicationEngine {
     var mergedArgs = args
     if (port != null) {
         mergedArgs = arrayOf("-port=$port") + args
     }
-    val server = embeddedServer(factory = CIO, environment = commandLineEnvironment(mergedArgs))
+    val server = embeddedServer(factory = Netty, environment = commandLineEnvironment(mergedArgs))
 
     server.start(wait = wait)
     return server
@@ -81,7 +82,7 @@ fun Application.module() {
             call.respond(HttpStatusCode.Created, wizzBanger)
         }
 
-        post("/widget"){
+        post("/widget") {
             val widget = call.receive<Widget>()
             call.respond(HttpStatusCode.Created, widget)
         }
@@ -99,13 +100,33 @@ fun Application.module() {
                 call.respond(HttpStatusCode.Forbidden)
             }
 
+            exception<JsonMappingException> { cause ->
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    ErrorResponse(type = "MISSING_OR_INCORRECT_FIELDS", message = errorMessageForJsonMappingException(cause))
+                )
+            }
+
         }
 
-        install(CallLogging){
+        install(CallLogging) {
             level = Level.INFO
+
+            mdc("corId") {
+                it.request.headers["X-NewRelic-Transaction"]?: UUID.randomUUID().toString()
+            }
         }
     }
 }
+
+private fun errorMessageForJsonMappingException(cause: JsonMappingException): String {
+    val badPath = Regex(".*[.](.*)").find(cause.pathReference, 0)?.groups?.last()?.value
+    val errorMessage =
+        "could not process request. ${badPath ?: "A field"} was either missing or of the incorrect type."
+    return errorMessage
+}
+
+data class ErrorResponse(val type: String, val message: String)
 
 data class ThymeleafUser(val id: Int, val name: String)
 

@@ -22,12 +22,6 @@ data class Fizzer(
 
 data class WizzBanger(var id: String? = null, var name: String? = null, var fizzer: Fizzer? = null)
 
-data class Widget(
-    var name: String? = null,
-    val jimbo: List<String>? = emptyList(),
-    val age: Int? = null
-)
-
 class FormParamsToJsonTranslatorTest {
     private val translator = FormParamsToJsonTranslator()
 
