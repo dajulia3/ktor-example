@@ -11,7 +11,8 @@ plugins {
     application
     kotlin("jvm") version "1.3.40"
     kotlin("kapt") version "1.3.40"
-    id("com.hpe.kraal") version "0.0.15" //add kraal to get ktor working in graalnative
+    id("com.hpe.kraal") version "0.0.15"
+    //TODO: consider integrating gradle dependency update plugin
 }
 
 
@@ -58,12 +59,6 @@ dependencies {
     //Consider requery as orm
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
-
-
-    //Graalvm support
-//    testImplementation("org.kohsuke:akuma:1.10")
-//    annotationProcessor("com.palantir.graal.annotations:graal-annotations-processors:$graalAnnotationsVersion")
-//    compileOnly("com.palantir.graal.annotations:graal-annotations-api:$graalAnnotationsVersion")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
@@ -124,15 +119,6 @@ fun isOnGraalVm(): Boolean {
 tasks.withType<KotlinCompile>().all {
     kotlinOptions.freeCompilerArgs += listOf("-Xuse-experimental=kotlin.Experimental", "-progressive")
 }
-//tasks.withType<KotlinCompile>().configureEach {
-//    kotlinOptions {
-//        jvmTarget = "1.8"
-//        // need use-experimental for Ktor CIO
-//        freeCompilerArgs += listOf("-Xuse-experimental=kotlin.Experimental", "-progressive")
-//        // disable -Werror with: ./gradlew -PwarningsAsErrors=false
-//        allWarningsAsErrors = project.findProperty("warningsAsErrors") != "false"
-//    }
-//}
 
 val fatjar by tasks.creating(Jar::class) {
 
