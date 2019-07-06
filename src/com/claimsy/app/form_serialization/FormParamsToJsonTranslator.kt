@@ -77,6 +77,11 @@ internal class FormParamsToJsonTranslator {
         val after = currentParam.substring(indexAfterMatch)
 
 
+        //TODO: Not sure why this logic is necessary.
+        //It is here because I did a faithful port of the Rack logic from
+        //here: https://github.com/rack/rack/blob/5e08d39b323d37fd354f63bac0fc30047c528e35/lib/rack/query_parser.rb
+        //I haven't succeeded to write a test that hits this code path yet, but am reluctant to remove it since
+        //it is in rack. Maybe that is just in rack to support cookie parsing?? This requires some more research.
         if (fieldName.isEmpty()) {
             return if (value != null && currentParam == "[]") {
                 nodeFactory.arrayNode().add(nodeFactory.pojoNode(value))
