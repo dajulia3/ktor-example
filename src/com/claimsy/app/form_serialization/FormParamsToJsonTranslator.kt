@@ -14,6 +14,10 @@ internal class FormParamsToJsonTranslator {
     fun jsonFromFormBody(formBody: String): ObjectNode? {
         val params = makeParams()
 
+        if(formBody.isBlank()){
+            return params
+        }
+
         val keyValPairs = formBody.split("&")
         val keysAlreadyPresent: HashSet<String> = HashSet()
         keyValPairs.forEach { pair ->
@@ -61,19 +65,19 @@ internal class FormParamsToJsonTranslator {
 
         val firstNameMatchResult = Regex("\\A[\\[\\]]*([^\\[\\]]+)\\]*").find(currentParam, 0)
 
-        var k = ""
+        var fieldName = ""
         var indexAfterMatch = currentParam.length
 
         if (firstNameMatchResult?.groups != null) {
             val firstNameMatchGroup = firstNameMatchResult.groups[1]
-            k = firstNameMatchGroup!!.value
+            fieldName = firstNameMatchGroup!!.value
             val fullMatchGroup = firstNameMatchResult.groups[0]
             indexAfterMatch = fullMatchGroup!!.range.last + 1
         }
         val after = currentParam.substring(indexAfterMatch)
 
 
-        if (k.isEmpty()) {
+        if (fieldName.isEmpty()) {
             return if (value != null && currentParam == "[]") {
                 nodeFactory.arrayNode().add(nodeFactory.pojoNode(value))
             } else {
@@ -86,7 +90,7 @@ internal class FormParamsToJsonTranslator {
         val matchesArrayAfterArray = Regex("^\\[\\](.+)$").find(after, 0)
 
         if (after == "") {
-            params.set(k, nodeFactory.pojoNode(value))
+            params.set(fieldName, nodeFactory.pojoNode(value))
         } else if (after == "[") {
             val jsonNode = params.get(currentParam)
             if (jsonNode == null) {
@@ -98,16 +102,16 @@ internal class FormParamsToJsonTranslator {
                 }
             }
         } else if (after == "[]") {
-            ensureCurrentParamIsArray(params, currentParam, k)
-            (params.get(k) as ArrayNode).add(nodeFactory.pojoNode(value))
+            ensureCurrentParamIsArray(params, currentParam, fieldName)
+            (params.get(fieldName) as ArrayNode).add(nodeFactory.pojoNode(value))
         } else if (matchesArrayAfterArray != null && !matchesFirstWordAfterArray!!.groups.isEmpty()) {
-            normalizeParamsForElementOfArray(params, currentParam, value, depth, k, matchesFirstWordAfterArray)
+            normalizeParamsForElementOfArray(params, currentParam, value, depth, fieldName, matchesFirstWordAfterArray)
 
         } else if (matchesArrayAfterArray != null && !matchesArrayAfterArray.groups.isEmpty()) {
-            normalizeParamsForElementOfArray(params, currentParam, value, depth, k, matchesArrayAfterArray)
+            normalizeParamsForElementOfArray(params, currentParam, value, depth, fieldName, matchesArrayAfterArray)
         } else {
-            ensureCurrentParamIsObject(params, currentParam, k)
-            params.set(k, normalizeParams(params.get(k) as ObjectNode, after, value, depth - 1))
+            ensureCurrentParamIsObject(params, currentParam, fieldName)
+            params.set(fieldName, normalizeParams(params.get(fieldName) as ObjectNode, after, value, depth - 1))
         }
 
         return params

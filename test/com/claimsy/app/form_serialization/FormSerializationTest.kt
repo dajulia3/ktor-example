@@ -61,6 +61,27 @@ class FormParamsToJsonTranslatorTest {
     }
 
     @Test
+    fun `it returns an empty json object for an empty body`(){
+        val result = translator.jsonFromFormBody("")
+        expectThat(result.toJson()).isSameJsonAs("{}")
+    }
+
+    @Test
+    fun `it can return arrays of one element`() {
+        val params = "zoo[animals][]=elephant"
+
+        val result = translator.jsonFromFormBody(params)
+
+        expectThat(result.toJson()).isSameJsonAs(
+            """
+            { 
+                "animals": ["elephant"]
+            }
+        """.trimIndent()
+        )
+    }
+
+    @Test
     fun `it creates deeply nested json`() {
         val params =
             "icecream[cone][wrapper]=paper&" +
